@@ -21,7 +21,8 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
-//
+
+// MIS RUTAS
 Route::middleware(['auth'])->group(function () {
     Route::get('/chat_list', [ChatController::class, 'chat_list'])->name('chat_list');
     Route::post('/chat/start', [ChatController::class, 'start'])->name('chat.start');

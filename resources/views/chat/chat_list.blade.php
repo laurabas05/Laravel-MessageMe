@@ -19,24 +19,6 @@
 
 
             <div class="flex-grow-1 overflow-auto">
-
-                <div class="container mt-5">
-                    <h3>Prueba subida de imagen</h3>
-
-                    <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
-
-                        @csrf
-                        @method('PATCH')
-
-                        <input type="file" name="profile_photo" class="form-control mb-3">
-
-                        <button type="submit" class="btn btn-success">
-                            Guardar
-                        </button>
-                    </form>
-                </div>
-
-
                 @foreach ($conversations as $conversation)
                 @php
                 $otherUser = $conversation->otherUser(auth()->user());
@@ -146,7 +128,7 @@
 
                             <div class="modal-body">
                                 <label class="form-label">Nombre del usuario</label>
-                                <input type="text" name="username" class="form-control" placeholder="Ej: Juan" required>
+                                <input type="text" name="username" class="form-control" placeholder="Ex: Juan" required>
                             </div>
 
                             <div class="modal-footer border-secondary">
@@ -155,7 +137,6 @@
                                 </button>
                             </div>
                         </form>
-
                     </div>
                 </div>
             </div>

@@ -9,22 +9,60 @@ use App\Models\Conversation;
 class ChatController extends Controller
 {
     public function chat_list(Request $request)
-{
-    $conversations = Conversation::whereHas('users', function ($q) {
-        $q->where('users.id', auth()->id());
-    })->with(['lastMessage'])->get();
+    {
+        $conversations = auth()->user()
+            ->conversations()
+            ->with(['users', 'messages.user', 'lastMessage'])
+            ->get();
 
-    $currentConversation = null;
+        $currentConversation = null;
+        $otherUser = null;
 
-    if ($request->conversation) {
-        $currentConversation = Conversation::with([
-            'messages.user'
-        ])->findOrFail($request->conversation);
+        if ($request->filled('conversation')) {
+            $currentConversation = $conversations
+                ->where('id', $request->conversation)
+                ->first();
+
+            if ($currentConversation) {
+                $otherUser = $currentConversation->otherUser(auth()->user());
+            }
+        }
+
+        return view('chat.chat_list', compact(
+            'conversations',
+            'currentConversation',
+            'otherUser'
+        ));
     }
 
-    return view('chat.chat_list', compact(
-        'conversations',
-        'currentConversation'
-    ));
-}
+    public function start(Request $request)
+    {
+        $request->validate([
+            'username' => 'required|string|exists:users,name'
+        ]);
+
+        $otherUser = User::where('name', $request->username)->first();
+
+        // ¿ya existe conversación?
+        $conversation = Conversation::whereHas('users', function ($q) use ($otherUser) {
+                $q->where('users.id', auth()->id());
+            })
+            ->whereHas('users', function ($q) use ($otherUser) {
+                $q->where('users.id', $otherUser->id);
+            })
+            ->first();
+
+        // si no existe → crear
+        if (!$conversation) {
+            $conversation = Conversation::create();
+            $conversation->users()->attach([
+                auth()->id(),
+                $otherUser->id
+            ]);
+        }
+
+        return redirect()->route('chat_list', [
+            'conversation' => $conversation->id
+        ]);
+    }
 }

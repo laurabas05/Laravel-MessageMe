@@ -21,10 +21,6 @@ Route::middleware('auth')->group(function () {
 require __DIR__.'/auth.php';
 
 //
-Route::get('/chat_list', function () {
-    return view('chat_list');
-});
-
 Route::middleware(['auth'])->group(function () {
     Route::get('/chat_detail', [ChatController::class, 'chat_detail'])->name('chat_detail');
     Route::get('/chat_list', [ChatController::class, 'chat_list'])->name('chat_list');

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\MessageController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -22,6 +23,8 @@ require __DIR__.'/auth.php';
 
 //
 Route::middleware(['auth'])->group(function () {
-    Route::get('/chat_detail', [ChatController::class, 'chat_detail'])->name('chat_detail');
     Route::get('/chat_list', [ChatController::class, 'chat_list'])->name('chat_list');
+    Route::post('/chat/start', [ChatController::class, 'start'])->name('chat.start');
 });
+
+Route::post('/messages/{conversation}', [MessageController::class, 'store'])->name('messages.store');

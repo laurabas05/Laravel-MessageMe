@@ -8,6 +8,8 @@
 
     {{-- Bootstrap --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
     body {
         background-color: #0b141a;
@@ -60,7 +62,7 @@
 <body class="vh-100 overflow-hidden">
 
     <nav class="navbar navbar-dark px-3" style="background:#202c33;">
-        <span class="navbar-brand">MessageMe</span>
+        <a href="/" class="navbar-brand">MessageMe</a>
 
         <div class="dropdown">
             <a class="text-white dropdown-toggle text-decoration-none" href="#" data-bs-toggle="dropdown">

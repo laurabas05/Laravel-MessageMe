@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageSent;
 use App\Models\Conversation;
 use Illuminate\Http\Request;
 
@@ -12,13 +13,17 @@ class MessageController extends Controller
             'content' => 'required|string',
         ]);
 
-        $conversation->messages()->create([
+        //WEBSOCKET
+        $message = $conversation->messages()->create([
             'user_id' => auth()->id(),
             'content' => $validated['content'],
         ]);
 
-        return redirect()->route('chat_list', [
-            'conversation' => $conversation->id
+        // se envía a todos menos al que escribe
+        broadcast(new MessageSent($message))->toOthers();
+
+        return response()->json([
+            'message' => $message->load('user')
         ]);
     }
 }

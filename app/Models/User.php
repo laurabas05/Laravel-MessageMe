@@ -9,6 +9,8 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+    protected $appends = ['profile_photo_url'];
+
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
@@ -55,5 +57,11 @@ class User extends Authenticatable
     public function conversations()
     {
         return $this->belongsToMany(Conversation::class);
+    }
+
+    public function getProfilePhotoUrlAttribute() {
+        return $this->profile_photo
+            ? asset('storage/' . $this->profile_photo)
+            : asset('default-avatar.png');
     }
 }
